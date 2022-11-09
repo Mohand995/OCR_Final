@@ -1,12 +1,15 @@
 import cv2
 import shutil
+import os
 import pytesseract
 #import preprocessing
 
 def Run(image_path):
     image=cv2.imread(image_path)
     pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    if os.path.exists("/app/ara_number_id.traineddata"):
+            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+     
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     print("Name : {}".format((name)))
