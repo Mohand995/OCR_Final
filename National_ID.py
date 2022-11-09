@@ -4,7 +4,7 @@ import pytesseract
 
 def Run(image_path):
     image=cv2.imread(image_path)
-    pytesseract.pytesseract.tesseract_cmd=r"/app/.apt/usr/bin/tesseract"
+    pytesseract.pytesseract.tesseract_cmd=r"/usr/bin/tesseract"
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     print("Name : {}".format((name)))
