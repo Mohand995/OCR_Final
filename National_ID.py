@@ -4,7 +4,7 @@ import pytesseract
 
 def Run(image_path):
     image=cv2.imread(image_path)
-    pytesseract.pytesseract.tesseract_cmd=r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    pytesseract.pytesseract.tesseract_cmd=r"/usr/bin/tesseract"
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     print("Name : {}".format((name)))
@@ -93,6 +93,7 @@ def Crop_ROI_Name(img):
     width = 712
     height = 512
     dim = (width, height)
+
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)	
     h,w,c=img.shape
     img=img[int(h*0.22):int(h*0.75),int(w/2):w]
