@@ -2,14 +2,12 @@ import cv2
 import shutil
 import os
 import pytesseract
-#import preprocessing
 
 def Run(image_path):
-    image=cv2.imread(image_path)
-    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    if os.path.exists("/app/ara_number_id.traineddata"):
-            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
-     
+    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    #if os.path.exists("/app/ara_number_id.traineddata"):
+    #        shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    image =cv2.imread(image_path)
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     print("Name : {}".format((name)))
@@ -89,8 +87,8 @@ def Crop_ROI_ID(img):
     dim = (width, height)
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     h,w,ch=img.shape
-    img = img[int(h/1.8):int(h/1.09), int(w/2.8):int(w/1)]
-
+    img = img[int(h*0.6):int(h/1.09), int(w/2.8):int(w/1)]
+  
     return img
 
 
@@ -101,7 +99,8 @@ def Crop_ROI_Name(img):
 
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)	
     h,w,c=img.shape
-    img=img[int(h*0.28):int(h*0.75),int(w/2):w]
+    img=img[int(h*0.20):int(h*0.75),int(w/2):w]
+
 
     return img
 
@@ -125,5 +124,5 @@ def enToArNumb(number):
 
 
 if __name__ == '__main__':
-    #image=preprocessing.extractIdCard("9.jpg")
-    Run("9.jpg")
+    
+    Run('9.jpg')
