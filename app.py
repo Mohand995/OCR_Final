@@ -19,6 +19,8 @@ def predict():
     if request.method == 'POST':
         img = request.files['my_image']
         file_path = os.path.join('uploads/' ,img.filename)
+        filename = secure_filename(img.filename)
+        file_path = os.path.join('/app/uploads/' ,filename)
         img.save(file_path)
         N,I = Run(file_path)
 

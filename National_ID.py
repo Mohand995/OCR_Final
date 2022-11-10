@@ -4,9 +4,9 @@ import os
 import pytesseract
 
 def Run(image_path):
-    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    #if os.path.exists("/app/ara_number_id.traineddata"):
-    #        shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    if os.path.exists("/app/ara_number_id.traineddata"):
+            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
     image =cv2.imread(image_path)
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
