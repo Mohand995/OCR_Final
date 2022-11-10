@@ -2,6 +2,7 @@ import cv2
 import shutil
 import os
 import pytesseract
+import numpy as np
 
 def Run(image_path):
     pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
