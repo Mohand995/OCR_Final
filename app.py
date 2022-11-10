@@ -20,7 +20,7 @@ def predict():
     if request.method == 'POST':
         img = request.files['my_image']
         filename = secure_filename(img.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file_path = os.path.join('app/' ,filename)
         img.save(file_path)
         #img=preprocessing.extractIdCard(img_path)
         N,I = Run(file_path)
