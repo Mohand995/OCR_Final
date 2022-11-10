@@ -1,29 +1,20 @@
 import cv2
 import shutil
+import os
 import pytesseract
 #import preprocessing
 
 def Run(image_path):
     image=cv2.imread(image_path)
-
-    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    #shutil.move("./app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    if os.path.exists("/app/ara_number_id.traineddata"):
+            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+     
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     print("Name : {}".format((name)))
     print("ID : {}".format(ID))
     return name,ID
-
-
-#cd  ./.apt/usr/share/tesseract-ocr/4.00/tessdata
-# rm eng.traineddata
-# mv   ./ara_number_id.traineddata          
-#  ./.apt/usr/share/tesseract-ocr/4.00/tessdata/
-
-
-
-
-
 
 def Extract_ara_ID(img):
 
@@ -135,4 +126,4 @@ def enToArNumb(number):
 
 if __name__ == '__main__':
     #image=preprocessing.extractIdCard("9.jpg")
-    Run("1.jpeg")
+    Run("9.jpg")
