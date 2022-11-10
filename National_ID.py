@@ -57,6 +57,10 @@ def Extract_ara_ID(img):
 def Extract_name(img):
     img = Crop_ROI_Name(img)
     img =cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    kernel = np.array([[0, -1, 0],
+                   [-1, 5,-1],
+                   [0, -1, 0]])
+    img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
 
     res = pytesseract.image_to_string(img, lang="ara").split()
