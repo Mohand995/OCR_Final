@@ -13,5 +13,5 @@ pyparsing==3.0.9
 pytesseract==0.3.10
 Werkzeug==2.2.2
 requests
-io
+
 
