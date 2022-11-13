@@ -21,6 +21,7 @@ def Run(image_path,api=True):
 
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
+
     DOB=Extract_DOB(image)
     eng_no=extract_eng_num(image)
 
@@ -55,6 +56,7 @@ def Extract_ara_ID(img):
                 f_res+= res[len(res) - i]
 
             if len(f_res)==14:
+                
                 return f_res
 
 
@@ -180,22 +182,15 @@ def Crop_ROI_Eng_No(img):
 
 #############################################################################
 def enToArNumb(number):
-    dic = {
-        0:'۰',
-        1:'١',
-        2:'٢',
-        3:'۳',
-        4:'۴',
-        5:'۵',
-        6:'۶',
-        7:'۷',
-        8:'۸',
-        9:'۹',
-    }
-    return dic.get(number)
-
+    english_to_arabic = {'1': '١', '2': '٢', '3': '٣', '4': '٤', '5': '٥', '6': '٦', '7': '٧', '8': '٨', '9': '٩', '0': '٠'}
+    return english_to_arabic.get(number)
 
  #########################################################################################   
+def ArToEnNumb(number):
+    arabic_to_english = {'١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9', '٠': '0'}
+    return arabic_to_english.get(number)
+
+ ##############################################################################
 
 def detect_digit_only(img):
     custom_config = r'--oem 3 --psm 6 outputbase digits'
