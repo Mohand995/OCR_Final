@@ -12,7 +12,6 @@ Pillow==9.3.0
 pyparsing==3.0.9
 pytesseract==0.3.10
 Werkzeug==2.2.2
-json
 requests
 io
 
