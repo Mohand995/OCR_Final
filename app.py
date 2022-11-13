@@ -22,6 +22,7 @@ def predict():
         file_path = os.path.join('uploads/' ,img.filename)
         img.save(file_path)
         result= Run(file_path,api=False)
+        os.remove(file_path)
     return render_template("index.html", id=result['ID'], name=result['name'],DOB=result['DOB'],no=result['Eng_Code'])
 
 
