@@ -2,11 +2,12 @@ import cv2
 import shutil
 import os
 import pytesseract
+import numpy as np
 
 def Run(image_path):
-    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    if os.path.exists("/app/ara_number_id.traineddata"):
-            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+   # pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+   # if os.path.exists("/app/ara_number_id.traineddata"):
+    #        shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
     image =cv2.imread(image_path)
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
@@ -23,8 +24,11 @@ def Extract_ara_ID(img):
     while (True):
         count = count + 1
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
         th, img = cv2.threshold(img, 100, 255, cv2.THRESH_TRUNC)
-
+        cv2.imshow("imkg",img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         res = pytesseract.image_to_string(img, lang="ara_number_id").split()
         print(res)
         if res != []:
@@ -52,13 +56,17 @@ def Extract_ara_ID(img):
             return "please re-capture the image"
         continue
 
+
 ############################################################################################
 
 def Extract_name(img):
     img = Crop_ROI_Name(img)
     img =cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    kernel = np.array([[0, -1, 0],
+                   [-1, 5,-1],
+                   [0, -1, 0]])
+    img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
-
     res = pytesseract.image_to_string(img, lang="ara").split()
     print(res)
     if res==[]:
@@ -88,7 +96,7 @@ def Crop_ROI_ID(img):
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     h,w,ch=img.shape
     img = img[int(h*0.6):int(h/1.09), int(w/2.8):int(w/1)]
-  
+
     return img
 
 
@@ -100,7 +108,6 @@ def Crop_ROI_Name(img):
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)	
     h,w,c=img.shape
     img=img[int(h*0.20):int(h*0.75),int(w/2):w]
-
 
     return img
 
