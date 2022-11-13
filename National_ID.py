@@ -10,14 +10,15 @@ from PIL import Image
 ################################################################################################################################
 
 def Run(image_path,api=True):
-    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    if os.path.exists("/app/ara_number_id.traineddata"):
-            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    #if os.path.exists("/app/ara_number_id.traineddata"):
+     #       shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
             
     if api:
         image=url_to_img(image_path)
     else :
         image =cv2.imread(image_path)
+
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
     DOB=Extract_DOB(image)
@@ -38,7 +39,6 @@ def Extract_ara_ID(img):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
         th, img = cv2.threshold(img, 100, 255, cv2.THRESH_TRUNC)
-    
         res = pytesseract.image_to_string(img, lang="ara_number_id").split()
         if res != []:
             for i in res:
@@ -98,7 +98,6 @@ def extract_eng_num(img):
     while(True):
             img =cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             res = detect_digit_only(img).split()
-            print(res)
             if res != []:
                 for i in res:
                     if len(i)>6:
