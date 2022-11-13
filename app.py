@@ -20,8 +20,6 @@ def predict():
     if request.method == 'POST':
         img = request.files['my_image']
         file_path = os.path.join('uploads/' ,img.filename)
-        filename = secure_filename(img.filename)
-        file_path = os.path.join('uploads/' ,filename)
         img.save(file_path)
         result= Run(file_path,api=False)
     return render_template("index.html", id=result['ID'], name=result['name'],DOB=result['DOB'],no=result['Eng_Code'])
