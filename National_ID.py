@@ -5,9 +5,9 @@ import pytesseract
 import numpy as np
 
 def Run(image_path):
-   # pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-   # if os.path.exists("/app/ara_number_id.traineddata"):
-    #        shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    if os.path.exists("/app/ara_number_id.traineddata"):
+            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
     image =cv2.imread(image_path)
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
@@ -26,9 +26,6 @@ def Extract_ara_ID(img):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
         th, img = cv2.threshold(img, 100, 255, cv2.THRESH_TRUNC)
-        cv2.imshow("imkg",img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
         res = pytesseract.image_to_string(img, lang="ara_number_id").split()
         print(res)
         if res != []:
