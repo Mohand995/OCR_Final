@@ -3,17 +3,28 @@ import shutil
 import os
 import pytesseract
 import numpy as np
+import json
+import requests 
+from io import BytesIO
+from PIL import Image
+################################################################################################################################
 
-def Run(image_path):
-   # pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+def Run(image_path,api=True):
+    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
    # if os.path.exists("/app/ara_number_id.traineddata"):
     #        shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
-    image =cv2.imread(image_path)
+    if api:
+        image=url_to_img(image_path)
+    else :
+        image =cv2.imread(image_path)
     name=Extract_name(image)
     ID=Extract_ara_ID(image)
-    print("Name : {}".format((name)))
-    print("ID : {}".format(ID))
-    return name,ID
+    DOB=Extract_DOB(image)
+    eng_no=extract_eng_num(image)
+
+    result={"name":name , "ID":ID, "DOB":DOB , "Eng_Code":eng_no}
+    return result
+#############################################################################################################
 
 def Extract_ara_ID(img):
 
@@ -26,11 +37,8 @@ def Extract_ara_ID(img):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
         th, img = cv2.threshold(img, 100, 255, cv2.THRESH_TRUNC)
-        cv2.imshow("imkg",img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    
         res = pytesseract.image_to_string(img, lang="ara_number_id").split()
-        print(res)
         if res != []:
             for i in res:
                 if len(i) > 13 and len(i) < 15 and i[0]==enToArNumb(2):
@@ -68,15 +76,63 @@ def Extract_name(img):
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
     res = pytesseract.image_to_string(img, lang="ara").split()
-    print(res)
     if res==[]:
         print("recapture image")
     else:
         name=str(res[0])+' '+str(res[1])
         return name
 
+#############################################################################################
+def Extract_DOB(img):
+        ID=Extract_ara_ID(img)
+        DOB=str(ID[1:3])+'/'+str(ID[3:5])+'/'+str(ID[5:7])
+        return DOB
+########################################################################################################
+
+def extract_eng_num(img):
+    
+    img =Crop_ROI_Eng_No(img)
+    copy=img
+    count=0
+    while(True):
+            img =cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            res = detect_digit_only(img).split()
+            print(res)
+            if res != []:
+                for i in res:
+                    if len(i)>6:
+                        return (i[len(i) - 7:])
+
+            res = pytesseract.image_to_string(img, lang="eng").split()
+            c_res=[]
+            if res != []:
+                for i in res:
+                    if len(i) > 6:
+                        c_res = i
+                        break
+
+            if (len(c_res) > 6):
+                ch=0
+                for i in c_res:
+                    if i.isalpha():
+                        ch=ch+1
+                        break
+                    else:
+                        continue
+                if ch>0:
+                    ""
+                else:
+                    return (c_res[len(c_res) - 7:])
 
 
+            img = increase_contrast(copy)
+            if count>1:
+                img = increase_contrast(img)
+            if count==3:
+                return "please re-capture the image"
+            continue
+
+#########################################################################################################
 
 def increase_contrast(img):
 
@@ -87,7 +143,7 @@ def increase_contrast(img):
     limg = cv2.merge((cl, a, b))
     final = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
     return final
-
+####################################################################################################
 
 def Crop_ROI_ID(img):
     width = 712
@@ -98,7 +154,7 @@ def Crop_ROI_ID(img):
     img = img[int(h*0.6):int(h/1.09), int(w/2.8):int(w/1)]
 
     return img
-
+################################################################################################
 
 def Crop_ROI_Name(img):
     width = 712
@@ -107,11 +163,22 @@ def Crop_ROI_Name(img):
 
     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)	
     h,w,c=img.shape
-    img=img[int(h*0.20):int(h*0.75),int(w/2):w]
+    img=img[int(h*0.20):int(h*0.75),int(w/2):int(w/1)]
 
     return img
+####################################################################################################
 
+def Crop_ROI_Eng_No(img):
+    width = 712
+    height = 512
+    dim = (width, height)
 
+    img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)	
+    h,w,c=img.shape
+    img = img[int(h/2):int(h), int(w/12.5):int(w/2.5)]
+    return img
+
+#############################################################################
 def enToArNumb(number):
     dic = {
         0:'۰',
@@ -128,8 +195,23 @@ def enToArNumb(number):
     return dic.get(number)
 
 
+ #########################################################################################   
 
+def detect_digit_only(img):
+    custom_config = r'--oem 3 --psm 6 outputbase digits'
+    res=pytesseract.image_to_string(img, config=custom_config)
+    return res
+
+###################################################################################################
+
+def url_to_img(url, save_as=''):
+  img = Image.open(BytesIO(requests.get(url).content))
+  if save_as:
+    img.save(save_as)
+  return np.array(img)
+
+  ##################################################################################
 
 if __name__ == '__main__':
     
-    Run('9.jpg')
+    Run('https://i.ibb.co/kGzHGRP/index.jpg')

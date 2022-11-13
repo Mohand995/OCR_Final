@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, url_for, send_from_directory, render
 from National_ID import  Run
 import os
 from werkzeug.utils import secure_filename
+import json
 
 UPLOAD_FOLDER = 'uploads'
 
@@ -22,9 +23,19 @@ def predict():
         filename = secure_filename(img.filename)
         file_path = os.path.join('uploads/' ,filename)
         img.save(file_path)
-        N,I = Run(file_path)
+        result= Run(file_path,api=False)
+    return render_template("index.html", id=result['ID'], name=result['name'],DOB=result['DOB'],no=result['Eng_Code'])
 
-    return render_template("index.html", id=I, name=N)
+
+@app.route('/submit_api',methods=['POST'])
+def predict_api():
+    data=request.json
+    img_path=data['url']
+    if request.method == 'POST':
+        result= Run(img_path)
+        result_json=json.dumps(result,ensure_ascii=False)
+
+    return result_json
 
 
 if __name__=='__main__':
