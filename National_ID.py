@@ -10,9 +10,9 @@ from PIL import Image
 ################################################################################################################################
 
 def Run(image_path,api=True):
-    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-   # if os.path.exists("/app/ara_number_id.traineddata"):
-          # shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+    if os.path.exists("/app/ara_number_id.traineddata"):
+           shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
             
     if api:
         image=url_to_img(image_path)
