@@ -82,9 +82,7 @@ def Extract_name(img):
                    [0, -1, 0]])
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
-    cv2.imshow("img",img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+  
     res = pytesseract.image_to_string(img, lang="ara").split()
     print(res)
     if res==[]:
