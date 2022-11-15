@@ -16,6 +16,8 @@ def Run(image_path,api=True):
             
     if api:
         image=url_to_img(image_path)
+        image=image[..., ::-1]
+        
     else :
         image =cv2.imread(image_path)
 
@@ -82,14 +84,13 @@ def Extract_name(img):
                    [0, -1, 0]])
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
-  
     res = pytesseract.image_to_string(img, lang="ara").split()
     print(res)
     if res==[]:
         print("recapture image")
     else:
         name=str(res[0])+' '+str(res[1])+' '+str(res[2])
-        Address=str(res[3])+' '+str(res[4])+' '+str(res[5])+' '+str(res[6])
+        Address=str(res[4])+' '+str(res[5])+' '+str(res[6])+' '+str(res[7])
         return name , Address
 
 #############################################################################################
@@ -207,7 +208,7 @@ def detect_digit_only(img):
 ###################################################################################################
 
 def url_to_img(url, save_as=''):
-  img = Image.open(BytesIO(requests.get(url).content))
+  img = Image.open(BytesIO(requests.get(url).content)).convert('RGB')
   if save_as:
     img.save(save_as)
   return np.array(img)
