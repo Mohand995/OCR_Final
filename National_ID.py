@@ -10,22 +10,26 @@ from PIL import Image
 ################################################################################################################################
 
 def Run(image_path,api=True):
-    pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
-    if os.path.exists("/app/ara_number_id.traineddata"):
-            shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
+    #pytesseract.pytesseract.tesseract_cmd='/app/.apt/usr/bin/tesseract'
+   # if os.path.exists("/app/ara_number_id.traineddata"):
+          # shutil.move("/app/ara_number_id.traineddata", "./.apt/usr/share/tesseract-ocr/4.00/tessdata/ara_number_id.traineddata")
             
     if api:
         image=url_to_img(image_path)
     else :
         image =cv2.imread(image_path)
 
-    name=Extract_name(image)
+    name,Address=Extract_name(image)
     ID=Extract_ara_ID(image)
 
     DOB=Extract_DOB(image)
     eng_no=extract_eng_num(image)
 
-    result={"name":name , "ID":ID, "DOB":DOB , "Eng_Code":eng_no}
+    result={"name":name ,
+           "ID":ID,
+           "Address": Address,
+           "DOB":DOB , 
+           "Eng_Code":eng_no}
     return result
 #############################################################################################################
 
@@ -78,12 +82,17 @@ def Extract_name(img):
                    [0, -1, 0]])
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel)
     _,img = cv2.threshold(img, 90, 255, cv2.THRESH_TRUNC)
+    cv2.imshow("img",img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
     res = pytesseract.image_to_string(img, lang="ara").split()
+    print(res)
     if res==[]:
         print("recapture image")
     else:
-        name=str(res[0])+' '+str(res[1])
-        return name
+        name=str(res[0])+' '+str(res[1])+' '+str(res[2])
+        Address=str(res[3])+' '+str(res[4])+' '+str(res[5])+' '+str(res[6])
+        return name , Address
 
 #############################################################################################
 def Extract_DOB(img):

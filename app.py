@@ -4,12 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 import json
 
-UPLOAD_FOLDER = 'uploads'
-
-
-
 app=Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/',methods=['GET'])
 def hello_world():
