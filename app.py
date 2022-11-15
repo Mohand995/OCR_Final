@@ -18,7 +18,7 @@ def predict():
         img.save(file_path)
         result= Run(file_path,api=False)
         os.remove(file_path)
-    return render_template("index.html", id=result['ID'], name=result['name'],DOB=result['DOB'],no=result['Eng_Code'])
+    return render_template("index.html", id=result['ID'], name=result['name'],DOB=result['DOB'],no=result['Eng_Code'],add=result['Address'])
 
 
 @app.route('/submit_api',methods=['POST'])
